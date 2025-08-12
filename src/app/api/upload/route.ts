@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 
     const key = `uploads/${crypto.randomUUID()}-${file.name.replace(/\s+/g, '-')}`;
     const blob = await put(key, file, {
-      access: 'private', // keep uploads private
+      access: 'public', // keep uploads private
       contentType: file.type || 'application/octet-stream',
       token: process.env.BLOB_READ_WRITE_TOKEN, // required on Edge
     });

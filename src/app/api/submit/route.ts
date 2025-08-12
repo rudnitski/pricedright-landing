@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
     const key = `submissions/${new Date().toISOString().slice(0,10)}-${crypto.randomUUID()}.json`;
     const blob = await put(key, JSON.stringify(record, null, 2), {
-      access: 'private',
+      access: 'public',
       contentType: 'application/json',
       token: process.env.BLOB_READ_WRITE_TOKEN,
     });

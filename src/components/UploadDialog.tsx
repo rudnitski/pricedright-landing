@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 
 type Props = { className?: string; children?: React.ReactNode };
 type Submission = {
@@ -17,8 +17,14 @@ const DAILY_LIMIT = Number(process.env.NEXT_PUBLIC_DAILY_SLOT_LIMIT || 30);
 
 // Trigger button
 function Trigger({ className, children }: Props) {
+  const handleClick = () => {
+    if (typeof document !== 'undefined') {
+      document.dispatchEvent(new CustomEvent('open-upload'));
+    }
+  };
+  
   return (
-    <button className={className} onClick={() => document.dispatchEvent(new CustomEvent('open-upload'))}>
+    <button className={className} onClick={handleClick}>
       {children}
     </button>
   );
@@ -27,10 +33,13 @@ function Trigger({ className, children }: Props) {
 // Container for modal
 function Container() {
   const [open, setOpen] = useState(false);
+  
   useEffect(() => {
+    if (typeof document === 'undefined') return;
+    
     const onOpen = () => setOpen(true);
-    document.addEventListener('open-upload', onOpen as any);
-    return () => document.removeEventListener('open-upload', onOpen as any);
+    document.addEventListener('open-upload', onOpen);
+    return () => document.removeEventListener('open-upload', onOpen);
   }, []);
 
   return open ? <Dialog onClose={() => setOpen(false)} /> : null;
@@ -48,17 +57,27 @@ function Dialog({ onClose }: { onClose: () => void }) {
   const inputId = useId();
 
   // WOZ-friendly, client-side queue simulation (keeps UX crisp)
-  const queueInfo = useMemo(() => {
-    // Random-ish but stable during session
-    const today = new Date().toDateString();
-    const key = `pr-queue-${today}`;
-    const existing = sessionStorage.getItem(key);
-    if (existing) return JSON.parse(existing) as { next: number; left: number };
-    const next = Math.floor(Math.random() * 10) + 4; // position 4–13
-    const left = Math.max(0, DAILY_LIMIT - next);
-    const val = { next, left };
-    sessionStorage.setItem(key, JSON.stringify(val));
-    return val;
+  // Compute on client after mount to avoid SSR/CSR mismatch
+  const [queueInfo, setQueueInfo] = useState<{ next: number; left: number } | null>(null);
+  useEffect(() => {
+    try {
+      const today = new Date().toDateString();
+      const key = `pr-queue-${today}`;
+      const existing = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(key) : null;
+      if (existing) {
+        setQueueInfo(JSON.parse(existing));
+        return;
+      }
+      const next = Math.floor(Math.random() * 10) + 4; // position 4–13
+      const left = Math.max(0, DAILY_LIMIT - next);
+      const val = { next, left };
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem(key, JSON.stringify(val));
+      }
+      setQueueInfo(val);
+    } catch {
+      // ignore any storage issues; leave null
+    }
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -81,7 +100,7 @@ function Dialog({ onClose }: { onClose: () => void }) {
         materials: materials || undefined,
         hours: hours === '' ? undefined : Number(hours),
         channel: channel || undefined,
-        brand: (brand || undefined) as any,
+        brand: brand || undefined,
         photoUrl,
         userAgent: navigator.userAgent,
       };
@@ -140,7 +159,7 @@ function Dialog({ onClose }: { onClose: () => void }) {
                 <label className="block text-sm font-medium">Where you plan to sell</label>
                 <select
                   required value={channel}
-                  onChange={(e) => setChannel(e.target.value as any)}
+                  onChange={(e) => setChannel(e.target.value as typeof channel)}
                   className="mt-1 w-full rounded-md border border-[#DCDCDC] px-3 py-2"
                 >
                   <option value="" disabled>Select</option>
@@ -173,7 +192,7 @@ function Dialog({ onClose }: { onClose: () => void }) {
               </div>
               <div>
                 <label className="block text-sm font-medium">Brand positioning</label>
-                <select value={brand} onChange={(e) => setBrand(e.target.value as any)}
+                <select value={brand} onChange={(e) => setBrand(e.target.value as typeof brand)}
                         className="mt-1 w-full rounded-md border border-[#DCDCDC] px-3 py-2">
                   <option value="budget">Budget</option>
                   <option value="mid">Mid</option>
@@ -188,7 +207,7 @@ function Dialog({ onClose }: { onClose: () => void }) {
 
             <div className="flex items-center justify-between">
               <div className="text-xs text-neutral-700">
-                Slots left today: <b>{Math.max(0, DAILY_LIMIT - (queueInfo.next || 0))}</b>
+                Slots left today: <b>{queueInfo ? Math.max(0, DAILY_LIMIT - (queueInfo.next || 0)) : '—'}</b>
               </div>
               <button
                 disabled={submitting || !file}
@@ -217,5 +236,6 @@ function Dialog({ onClose }: { onClose: () => void }) {
   );
 }
 
-export default { Trigger, Container } as any;
+const UploadDialog = { Trigger, Container };
+export default UploadDialog;
 export { Trigger, Container };

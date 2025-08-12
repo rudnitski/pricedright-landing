@@ -97,8 +97,6 @@ function SampleReportModalTrigger({ children, className }: SampleReportModalProp
   );
 }
 
-const SampleReportModal = {
-  Trigger: SampleReportModalTrigger,
-};
-
+const SampleReportModal = { Trigger: SampleReportModalTrigger };
 export default SampleReportModal;
+export { SampleReportModalTrigger as Trigger };
