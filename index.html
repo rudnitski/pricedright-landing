@@ -16,6 +16,9 @@
     :root{
       --bg:#F9F7F4; --fg:#0E0E0F; --line:#DCDCDC; --muted:#666; 
       --btn:#0E0E0F; --btnfg:#fff; --success:#22c55e; --error:#ef4444;
+      /* Subtle accent for primary CTA */
+      --cta:#1F2937; /* gray-800 */
+      --cta-hover:#111827; /* gray-900 */
     }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,sans-serif}
@@ -37,10 +40,17 @@
     .stat-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
     
     /* Buttons */
-    .btn{background:var(--btn);color:var(--btnfg);border:none;border-radius:10px;padding:14px 24px;cursor:pointer;font-size:16px;font-weight:600;transition:transform 0.2s}
+    .btn{background:var(--btn);color:var(--btnfg);border:none;border-radius:10px;padding:14px 24px;cursor:pointer;font-size:16px;font-weight:600;transition:transform 0.2s, box-shadow 0.2s}
     .btn:hover{transform:translateY(-2px)}
     .btn:disabled{opacity:.6;cursor:default;transform:none}
     .btn-ghost{border:2px solid var(--line);background:transparent;color:var(--fg)}
+
+    /* Primary CTA emphasis */
+    .btn-cta{font-size:18px;padding:16px 28px;border-radius:12px;
+      background:var(--cta); color:#fff; border:1px solid #0b0b0c;
+      box-shadow:0 2px 8px rgba(0,0,0,0.12)}
+    .btn-cta:hover{background:var(--cta-hover); box-shadow:0 4px 12px rgba(0,0,0,0.18)}
+    .btn-cta:focus{outline:none; box-shadow:0 0 0 3px rgba(0,0,0,0.18)}
     
     /* Cards */
     .card{border:1px solid var(--line);background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
@@ -111,6 +121,7 @@
       .trust-bar{flex-direction:column;gap:12px}
       .grid2{grid-template-columns:1fr}
       .example-section{display:none}
+      .hero .btn-cta{width:100%}
     }
     
     /* Loading state */
@@ -126,9 +137,9 @@
     <div class="wrap row">
       <div>
         <span class="logo">PricedRight</span>
-        <span class="trust">Beta • 523 reports sent</span>
+        <span class="trust">Beta</span>
       </div>
-      <button class="btn" onclick="openModal()">Get pricing report →</button>
+      <button class="btn btn-cta" onclick="openModal()">Get pricing report →</button>
     </div>
   </header>
 
@@ -154,7 +165,7 @@
         </div>
         
         <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <button class="btn" onclick="openModal()">Get your pricing report →</button>
+          <button class="btn btn-cta" onclick="openModal()">Get your pricing report →</button>
         </div>
       </div>
       
