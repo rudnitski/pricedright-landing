@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PricedRight — Never underprice your jewelry again</title>
   <meta name="description" content="Upload a photo. Get expert pricing in 24 hours. Trusted by 500+ Etsy sellers. Free during beta.">
-  <meta property="og:image" content="example-jewelry.jpg">
+  <meta property="og:image" content="assets/example-jewelry.png">
   
   <!-- Open Graph for Reddit/social -->
   <meta property="og:title" content="PricedRight - AI Jewelry Pricing Assistant" />
@@ -103,7 +103,9 @@
     
     /* Mobile */
     @media (max-width:768px){
-      .hero{grid-template-columns:1fr;gap:24px;padding:32px 0}
+      /* Reorder hero for mobile: show the example card first */
+      .hero{display:flex;flex-direction:column;gap:24px;padding:32px 0}
+      .hero > .card{order:-1}
       .hero h1{font-size:32px}
       .stats{flex-direction:column;gap:12px}
       .trust-bar{flex-direction:column;gap:12px}
@@ -153,13 +155,11 @@
         
         <div style="display:flex;gap:12px;flex-wrap:wrap">
           <button class="btn" onclick="openModal()">Get your pricing report →</button>
-          <button class="btn btn-ghost example-button" onclick="scrollToExample()">See example ↓</button>
         </div>
       </div>
       
       <div class="card">
-        <img class="example-img" alt="Handmade bracelet example" 
-             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Cdefs%3E%3ClinearGradient id='g'%3E%3Cstop offset='0%25' stop-color='%23E5DEFF'/%3E%3Cstop offset='100%25' stop-color='%23FFDEE2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g)' width='400' height='260'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-family='system-ui' font-size='16'%3EYour jewelry photo here%3C/text%3E%3C/svg%3E" />
+        <img class="example-img" alt="Handmade gemstone beaded bracelet example" src="assets/example-jewelry.png" />
         <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">AI Analysis</div>
         <div class="price-display">$45 – $58</div>
         <div class="price-breakdown">
@@ -171,42 +171,7 @@
       </div>
     </section>
     
-    <!-- Legal: Privacy & Terms -->
-    <section class="legal" id="legal">
-      <div class="wrap">
-        <h2 id="privacy">Privacy Policy</h2>
-        <p>We collect the information you provide when submitting the pricing form: your email address, jewelry photo, platform preference, and optional details about materials, time, and notes. We also collect campaign parameters (e.g., utm_source) that may be appended to your submission. This information is used to provide pricing reports, beta access invitations, product updates, and support.</p>
-        <p>Form submissions are processed by Formspree and stored securely. We use Plausible Analytics to understand traffic; Plausible is privacy-friendly and does not use cookies or store personally identifiable data.</p>
-        <ul>
-          <li><strong>Data we collect:</strong> Email, photo, platform preference, optional materials/time/notes, and UTM parameters.</li>
-          <li><strong>How we use it:</strong> To analyze your jewelry and send pricing reports; to contact you about PricedRight beta and updates; to improve our service.</li>
-          <li><strong>Photo handling:</strong> Your jewelry photos are analyzed by our team (humans + AI) and stored securely. Photos are never shared publicly or used for marketing without explicit permission.</li>
-          <li><strong>Sharing:</strong> We do not sell personal data. Third-party processors: Formspree (form handling) and Plausible (analytics).</li>
-          <li><strong>Retention & deletion:</strong> We retain data until you unsubscribe or request deletion. Email <a href="mailto:beadmatchapp@gmail.com">beadmatchapp@gmail.com</a> to access or delete your data.</li>
-        </ul>
-
-        <h2 id="terms">Terms of Service</h2>
-        <h3>Beta Program</h3>
-        <p>PricedRight is currently in beta. Beta access is free and no payment is required or collected. By submitting your jewelry for analysis, you understand that:</p>
-        <ul>
-          <li>Pricing reports are estimates based on our analysis and should be used as guidance only</li>
-          <li>Actual market performance may vary based on numerous factors</li>
-          <li>Reports are delivered within 24 hours during business days</li>
-          <li>Beta features and availability may change without notice</li>
-        </ul>
-        
-        <h3>Future Pricing</h3>
-        <p>We may introduce paid plans after the beta period ends. Any pricing changes will be communicated in advance, and you'll have the option to opt-in or discontinue use. No payment information is collected during beta.</p>
-        
-        <h3>Intellectual Property</h3>
-        <p>You retain all rights to your jewelry designs and photos. By submitting content, you grant us a limited license to analyze your submission and provide pricing recommendations. We will never use your designs for any purpose other than providing you with pricing analysis without your explicit consent.</p>
-        
-        <h3>Disclaimer</h3>
-        <p>PricedRight provides pricing suggestions based on market analysis and is not responsible for actual sales performance. Our service is not affiliated with or endorsed by Etsy, Instagram, or any other platform mentioned.</p>
-        
-        <p style="margin-top:24px"><strong>Contact:</strong> For any questions about these terms or our privacy practices, email <a href="mailto:beadmatchapp@gmail.com">beadmatchapp@gmail.com</a></p>
-      </div>
-    </section>
+    <!-- Legal section moved to footer -->
 
     <div class="trust-bar">
       <div class="trust-item">
@@ -341,7 +306,45 @@
 
   <footer style="padding:40px 20px;text-align:center;border-top:1px solid var(--line);color:var(--muted);font-size:14px">
     <div class="wrap">
-      © 2025 PricedRight • <a href="#privacy" style="color:var(--muted);text-decoration:underline">Privacy</a> • <a href="#terms" style="color:var(--muted);text-decoration:underline">Terms</a> • Contact: <a href="mailto:beadmatchapp@gmail.com" style="color:var(--muted);text-decoration:underline">beadmatchapp@gmail.com</a>
+      © 2025 PricedRight • <a href="#privacy" onclick="openLegal('privacy'); return false;" style="color:var(--muted);text-decoration:underline">Privacy</a> • <a href="#terms" onclick="openLegal('terms'); return false;" style="color:var(--muted);text-decoration:underline">Terms</a> • Contact: <a href="mailto:beadmatchapp@gmail.com" style="color:var(--muted);text-decoration:underline">beadmatchapp@gmail.com</a>
+
+      <div class="footer-legal" style="text-align:left;margin-top:16px">
+        <details id="privacy" class="footer-legal-item" style="margin-bottom:12px">
+          <summary style="cursor:pointer;color:var(--fg);font-weight:600">Privacy Policy</summary>
+          <div style="font-size:13px;color:var(--muted);margin-top:8px">
+            <p>We collect the information you provide when submitting the pricing form: your email address, jewelry photo, platform preference, and optional details about materials, time, and notes. We also collect campaign parameters (e.g., utm_source) that may be appended to your submission. This information is used to provide pricing reports, beta access invitations, product updates, and support.</p>
+            <p>Form submissions are processed by Formspree and stored securely. We use Plausible Analytics to understand traffic; Plausible is privacy-friendly and does not use cookies or store personally identifiable data.</p>
+            <ul>
+              <li><strong>Data we collect:</strong> Email, photo, platform preference, optional materials/time/notes, and UTM parameters.</li>
+              <li><strong>How we use it:</strong> To analyze your jewelry and send pricing reports; to contact you about PricedRight beta and updates; to improve our service.</li>
+              <li><strong>Photo handling:</strong> Your jewelry photos are analyzed by our team (humans + AI) and stored securely. Photos are never shared publicly or used for marketing without explicit permission.</li>
+              <li><strong>Sharing:</strong> We do not sell personal data. Third-party processors: Formspree (form handling) and Plausible (analytics).</li>
+              <li><strong>Retention & deletion:</strong> We retain data until you unsubscribe or request deletion. Email <a href="mailto:beadmatchapp@gmail.com">beadmatchapp@gmail.com</a> to access or delete your data.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details id="terms" class="footer-legal-item">
+          <summary style="cursor:pointer;color:var(--fg);font-weight:600">Terms of Service</summary>
+          <div style="font-size:13px;color:var(--muted);margin-top:8px">
+            <h3 style="font-size:1rem;margin:8px 0">Beta Program</h3>
+            <p>PricedRight is currently in beta. Beta access is free and no payment is required or collected. By submitting your jewelry for analysis, you understand that:</p>
+            <ul>
+              <li>Pricing reports are estimates based on our analysis and should be used as guidance only</li>
+              <li>Actual market performance may vary based on numerous factors</li>
+              <li>Reports are delivered within 24 hours during business days</li>
+              <li>Beta features and availability may change without notice</li>
+            </ul>
+            <h3 style="font-size:1rem;margin:8px 0">Future Pricing</h3>
+            <p>We may introduce paid plans after the beta period ends. Any pricing changes will be communicated in advance, and you'll have the option to opt-in or discontinue use. No payment information is collected during beta.</p>
+            <h3 style="font-size:1rem;margin:8px 0">Intellectual Property</h3>
+            <p>You retain all rights to your jewelry designs and photos. By submitting content, you grant us a limited license to analyze your submission and provide pricing recommendations. We will never use your designs for any purpose other than providing you with pricing analysis without your explicit consent.</p>
+            <h3 style="font-size:1rem;margin:8px 0">Disclaimer</h3>
+            <p>PricedRight provides pricing suggestions based on market analysis and is not responsible for actual sales performance. Our service is not affiliated with or endorsed by Etsy, Instagram, or any other platform mentioned.</p>
+            <p style="margin-top:8px"><strong>Contact:</strong> For any questions about these terms or our privacy practices, email <a href="mailto:beadmatchapp@gmail.com">beadmatchapp@gmail.com</a></p>
+          </div>
+        </details>
+      </div>
     </div>
   </footer>
 
@@ -609,8 +612,14 @@
       // Smoothly scroll to the target after a tiny delay
       setTimeout(() => {
         const el = document.getElementById(sectionId);
-        if (el && el.scrollIntoView) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (el) {
+          // If it's a <details>, open it before scrolling
+          if (el.tagName && el.tagName.toLowerCase() === 'details') {
+            el.open = true;
+          }
+          if (el.scrollIntoView) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         } else {
           location.hash = sectionId;
         }
