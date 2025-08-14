@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PricedRight — Never underprice your jewelry again</title>
   <meta name="description" content="Upload a photo. Get expert pricing in 24 hours. Trusted by 500+ Etsy sellers. Free during beta.">
+  <meta property="og:image" content="example-jewelry.jpg">
   
   <!-- Open Graph for Reddit/social -->
   <meta property="og:title" content="PricedRight - AI Jewelry Pricing Assistant" />
@@ -90,6 +91,16 @@
     .success-msg{color:var(--muted);margin-bottom:24px}
     .queue-info{background:var(--bg);padding:16px;border-radius:12px;font-size:14px}
     
+    /* Legal section */
+    .legal{background:#fff;padding:40px 20px;color:var(--fg);border-top:1px solid var(--line)}
+    .legal .wrap{max-width:900px}
+    .legal h2{font-size:1.6rem;margin:20px 0 10px}
+    .legal h3{font-size:1.1rem;margin:16px 0 8px}
+    .legal p{margin-bottom:12px;line-height:1.65;color:var(--muted)}
+    .legal ul{margin:8px 0 16px 20px}
+    .legal li{margin-bottom:8px;color:var(--muted)}
+    .legal a{color:var(--btn);text-decoration:underline}
+    
     /* Mobile */
     @media (max-width:768px){
       .hero{grid-template-columns:1fr;gap:24px;padding:32px 0}
@@ -97,6 +108,7 @@
       .stats{flex-direction:column;gap:12px}
       .trust-bar{flex-direction:column;gap:12px}
       .grid2{grid-template-columns:1fr}
+      .example-section{display:none}
     }
     
     /* Loading state */
@@ -141,7 +153,7 @@
         
         <div style="display:flex;gap:12px;flex-wrap:wrap">
           <button class="btn" onclick="openModal()">Get your pricing report →</button>
-          <button class="btn btn-ghost" onclick="scrollToExample()">See example ↓</button>
+          <button class="btn btn-ghost example-button" onclick="scrollToExample()">See example ↓</button>
         </div>
       </div>
       
@@ -156,6 +168,43 @@
           <div class="breakdown-item">💰 Margin: 68%</div>
           <div class="breakdown-item">🏪 Platform: Etsy</div>
         </div>
+      </div>
+    </section>
+    
+    <!-- Legal: Privacy & Terms -->
+    <section class="legal" id="legal">
+      <div class="wrap">
+        <h2 id="privacy">Privacy Policy</h2>
+        <p>We collect the information you provide when submitting the pricing form: your email address, jewelry photo, platform preference, and optional details about materials, time, and notes. We also collect campaign parameters (e.g., utm_source) that may be appended to your submission. This information is used to provide pricing reports, beta access invitations, product updates, and support.</p>
+        <p>Form submissions are processed by Formspree and stored securely. We use Plausible Analytics to understand traffic; Plausible is privacy-friendly and does not use cookies or store personally identifiable data.</p>
+        <ul>
+          <li><strong>Data we collect:</strong> Email, photo, platform preference, optional materials/time/notes, and UTM parameters.</li>
+          <li><strong>How we use it:</strong> To analyze your jewelry and send pricing reports; to contact you about PricedRight beta and updates; to improve our service.</li>
+          <li><strong>Photo handling:</strong> Your jewelry photos are analyzed by our team (humans + AI) and stored securely. Photos are never shared publicly or used for marketing without explicit permission.</li>
+          <li><strong>Sharing:</strong> We do not sell personal data. Third-party processors: Formspree (form handling) and Plausible (analytics).</li>
+          <li><strong>Retention & deletion:</strong> We retain data until you unsubscribe or request deletion. Email <a href="mailto:beadmatchapp@gmail.com">beadmatchapp@gmail.com</a> to access or delete your data.</li>
+        </ul>
+
+        <h2 id="terms">Terms of Service</h2>
+        <h3>Beta Program</h3>
+        <p>PricedRight is currently in beta. Beta access is free and no payment is required or collected. By submitting your jewelry for analysis, you understand that:</p>
+        <ul>
+          <li>Pricing reports are estimates based on our analysis and should be used as guidance only</li>
+          <li>Actual market performance may vary based on numerous factors</li>
+          <li>Reports are delivered within 24 hours during business days</li>
+          <li>Beta features and availability may change without notice</li>
+        </ul>
+        
+        <h3>Future Pricing</h3>
+        <p>We may introduce paid plans after the beta period ends. Any pricing changes will be communicated in advance, and you'll have the option to opt-in or discontinue use. No payment information is collected during beta.</p>
+        
+        <h3>Intellectual Property</h3>
+        <p>You retain all rights to your jewelry designs and photos. By submitting content, you grant us a limited license to analyze your submission and provide pricing recommendations. We will never use your designs for any purpose other than providing you with pricing analysis without your explicit consent.</p>
+        
+        <h3>Disclaimer</h3>
+        <p>PricedRight provides pricing suggestions based on market analysis and is not responsible for actual sales performance. Our service is not affiliated with or endorsed by Etsy, Instagram, or any other platform mentioned.</p>
+        
+        <p style="margin-top:24px"><strong>Contact:</strong> For any questions about these terms or our privacy practices, email <a href="mailto:beadmatchapp@gmail.com">beadmatchapp@gmail.com</a></p>
       </div>
     </section>
 
@@ -174,7 +223,7 @@
       </div>
     </div>
 
-    <section id="example" style="padding:40px 0;border-top:1px solid var(--line)">
+    <section id="example" class="example-section" style="padding:40px 0;border-top:1px solid var(--line)">
       <h2 style="font-size:28px;margin-bottom:24px">What you'll get</h2>
       <div class="grid2">
         <div>
@@ -269,8 +318,10 @@
           <button type="submit" class="btn" style="width:100%" id="submitBtn">
             Get my pricing report →
           </button>
-          <p style="text-align:center;margin-top:12px;font-size:13px;color:var(--muted)">
-            Free during beta • 24-hour delivery • <span id="queuePosition">You'll be #8 in queue</span>
+          <p style="text-align:center;margin-top:12px;font-size:12px;color:var(--muted)">
+            🔒 By clicking "Get my pricing report", you agree to our <a href="#terms" onclick="openLegal('terms'); return false;">Terms</a> and <a href="#privacy" onclick="openLegal('privacy'); return false;">Privacy Policy</a>.<br>
+            Free during beta • 24-hour delivery • <span id="queuePosition">You'll be #8 in queue</span><br>
+            You'll receive your pricing report and may receive product updates. Unsubscribe anytime.
           </p>
         </div>
       </form>
@@ -290,7 +341,7 @@
 
   <footer style="padding:40px 20px;text-align:center;border-top:1px solid var(--line);color:var(--muted);font-size:14px">
     <div class="wrap">
-      Questions? Email help@pricedright.ai • Made by makers, for makers
+      © 2025 PricedRight • <a href="#privacy" style="color:var(--muted);text-decoration:underline">Privacy</a> • <a href="#terms" style="color:var(--muted);text-decoration:underline">Terms</a> • Contact: <a href="mailto:beadmatchapp@gmail.com" style="color:var(--muted);text-decoration:underline">beadmatchapp@gmail.com</a>
     </div>
   </footer>
 
@@ -342,7 +393,13 @@
     }
     
     function scrollToExample() {
-      document.getElementById('example').scrollIntoView({ behavior: 'smooth' });
+      // On mobile, open the modal instead of scrolling to example
+      if (window.innerWidth <= 768) {
+        openModal();
+      } else {
+        // On desktop, scroll to the example section
+        document.getElementById('example').scrollIntoView({ behavior: 'smooth' });
+      }
     }
     
     // File handling
@@ -482,6 +539,16 @@
       formData.append('user_agent', navigator.userAgent);
       formData.append('timestamp', new Date().toISOString());
       
+      // Add subreddit parameter if present (for Reddit ads)
+      if (urlParams.get('subreddit')) {
+        formData.append('subreddit', urlParams.get('subreddit'));
+      }
+      
+      // Add referrer
+      if (document.referrer) {
+        formData.append('referrer', document.referrer);
+      }
+      
       try {
         // Submit to Formspree
         const response = await fetch('https://formspree.io/f/mwpqyneb', {
@@ -534,6 +601,31 @@
         window.plausible(event, { props });
       }
     }
+    
+    // Close modal and smoothly scroll to legal section
+    function openLegal(sectionId) {
+      // Close modal if open
+      modal.classList.remove('open');
+      // Smoothly scroll to the target after a tiny delay
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el && el.scrollIntoView) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          location.hash = sectionId;
+        }
+      }, 50);
+    }
+    
+    // Hide example button on mobile
+    function updateExampleButton() {
+      const btn = document.querySelector('.example-button');
+      if (btn) {
+        btn.style.display = window.innerWidth <= 768 ? 'none' : 'inline-block';
+      }
+    }
+    window.addEventListener('resize', updateExampleButton);
+    updateExampleButton();
   </script>
 </body>
 </html>
