@@ -54,6 +54,7 @@
     
     /* Cards */
     .card{border:1px solid var(--line);background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+    .example-badge{display:inline-block;background:#4338ca;color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
     .example-img{width:100%;height:260px;object-fit:cover;border-radius:12px;margin-bottom:16px}
     .price-display{font-size:28px;font-weight:700;margin:12px 0}
     .price-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
@@ -65,10 +66,11 @@
     .trust-icon{font-size:20px}
     
     /* Modal */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:100}
+    .modal{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;z-index:100;overflow-y:auto;padding:20px 0}
     .modal.open{display:flex}
     .backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.5)}
-    .sheet{position:relative;width:90%;max-width:520px;max-height:90vh;overflow-y:auto;background:#fff;border-radius:20px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+    .sheet{position:relative;width:90%;max-width:520px;background:#fff;border-radius:20px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.3);margin:auto}
+    .sheet.compact{padding:20px}
     
     /* Form */
     .form-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
@@ -82,6 +84,10 @@
     
     .preview{display:none;align-items:center;gap:12px;padding:12px;background:var(--bg);border-radius:8px;margin-top:12px}
     .preview img{width:60px;height:60px;object-fit:cover;border-radius:6px}
+    .preview.has-image{display:flex}
+    .upload-zone.has-file{padding:20px;border-style:solid;border-color:var(--success)}
+    .upload-zone.has-file .upload-icon{display:none}
+    .upload-zone.has-file > div{display:none}
     .preview-info{flex:1}
     .preview-name{font-weight:600;font-size:14px}
     .preview-size{font-size:12px;color:var(--muted)}
@@ -111,17 +117,34 @@
     .legal li{margin-bottom:8px;color:var(--muted)}
     .legal a{color:var(--btn);text-decoration:underline}
     
+    /* Mobile hero intro */
+    .mobile-intro{display:none;text-align:center;padding:20px 0 16px;border-bottom:1px solid var(--line)}
+    .mobile-intro h1{font-size:24px;line-height:1.2;margin:0 0 8px;font-weight:700}
+    .mobile-intro p{font-size:14px;color:var(--muted);margin:0}
+    
+    /* Sticky mobile CTA */
+    .sticky-cta{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:12px 20px;z-index:50;box-shadow:0 -4px 12px rgba(0,0,0,0.08)}
+    
     /* Mobile */
     @media (max-width:768px){
       /* Reorder hero for mobile: show the example card first */
       .hero{display:flex;flex-direction:column;gap:24px;padding:32px 0}
       .hero > .card{order:-1}
-      .hero h1{font-size:32px}
+      .hero h1{display:none} /* Hide main headline on mobile - we show mobile-intro instead */
+      .hero .subtitle{display:none}
       .stats{flex-direction:column;gap:12px}
       .trust-bar{flex-direction:column;gap:12px}
       .grid2{grid-template-columns:1fr}
       .example-section{display:none}
       .hero .btn-cta{width:100%}
+      .mobile-intro{display:block}
+      .sticky-cta{display:block}
+      .modal{padding-top:60px} /* More space at top on mobile */
+      .sheet{width:95%;padding:16px}
+      .form-header h2{font-size:20px}
+      .upload-zone{padding:24px}
+      .form-group{margin-top:16px}
+      .grid2{gap:12px}
     }
     
     /* Loading state */
@@ -144,6 +167,11 @@
   </header>
 
   <main class="wrap">
+    <!-- Mobile intro - only visible on mobile -->
+    <div class="mobile-intro">
+      <h1>Is your jewelry priced right?</h1>
+      <p>Stop guessing. Get expert pricing in 24h.</p>
+    </div>
     <section class="hero">
       <div>
         <h1>Never underprice your jewelry again</h1>
@@ -170,7 +198,8 @@
       </div>
       
       <div class="card">
-        <img class="example-img" alt="Handmade gemstone beaded bracelet example" src="assets/example-jewelry.png" />
+        <span class="example-badge">✨ Example Analysis</span>
+        <img class="example-img" alt="Example: Handmade gemstone bracelet" src="assets/example-jewelry.png" />
         <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">AI Analysis</div>
         <div class="price-display">$45 – $58</div>
         <div class="price-breakdown">
@@ -181,6 +210,11 @@
         </div>
       </div>
     </section>
+
+    <!-- Sticky CTA for mobile -->
+    <div class="sticky-cta">
+      <button class="btn btn-cta" style="width:100%" onclick="openModal()">Get pricing for YOUR jewelry →</button>
+    </div>
     
     <!-- Legal section moved to footer -->
 
@@ -225,22 +259,27 @@
   <!-- Upload Modal -->
   <div class="modal" id="uploadModal">
     <div class="backdrop" onclick="closeModal()"></div>
-    <div class="sheet">
+    <div class="sheet compact">
       <div class="form-header">
-        <h2>Get your pricing report</h2>
+        <h2>Price YOUR jewelry</h2>
         <button class="close-btn" onclick="closeModal()">×</button>
+      </div>
+      
+      <!-- Add clear instruction -->
+      <div style="background:#f0f9ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-bottom:16px;font-size:14px;color:#1e40af">
+        📸 <strong>Upload a photo of the jewelry piece you want to price</strong> - we'll analyze it and send you a detailed pricing report.
       </div>
       
       <form id="pricingForm">
         <div class="upload-zone" id="uploadZone">
           <div class="upload-icon">📸</div>
-          <div style="font-weight:600;margin-bottom:4px">Click to upload photo</div>
-          <div style="font-size:13px;color:var(--muted)">or drag and drop • JPG/PNG/WEBP/HEIC up to 25MB</div>
+          <div style="font-weight:600;margin-bottom:4px">Upload YOUR jewelry photo</div>
+          <div style="font-size:13px;color:var(--muted)">Click or drag • JPG/PNG up to 25MB</div>
           <input type="file" id="fileInput" name="photo" accept="image/*" style="display:none">
         </div>
         
         <div class="preview" id="preview">
-          <img id="previewImg" alt="Preview">
+          <img id="previewImg" alt="Your jewelry">
           <div class="preview-info">
             <div class="preview-name" id="fileName">filename.jpg</div>
             <div class="preview-size" id="fileSize">2.3 MB</div>
@@ -248,56 +287,52 @@
           <button type="button" onclick="removeFile()" style="background:none;border:none;color:var(--error);cursor:pointer">Remove</button>
         </div>
         
-        <div class="grid2">
-          <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" id="email" name="email" required placeholder="you@example.com">
+        <!-- Email and platform are most important - keep them prominent -->
+        <div class="form-group">
+          <label for="email">Email for your report</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
+        </div>
+        
+        <div class="form-group">
+          <label for="platform">Where do you sell?</label>
+          <select id="platform" name="platform" required>
+            <option value="">Select...</option>
+            <option value="etsy">Etsy</option>
+            <option value="instagram">Instagram</option>
+            <option value="website">Own website</option>
+            <option value="craft_fair">Craft fairs</option>
+            <option value="not_yet">Not selling yet</option>
+          </select>
+        </div>
+        
+        <!-- Collapsible optional fields on mobile -->
+        <details style="margin-top:16px">
+          <summary style="cursor:pointer;font-weight:600;font-size:14px;padding:8px 0">+ Add details for better accuracy (optional)</summary>
+          <div style="margin-top:12px">
+            <div class="form-group">
+              <label for="materials">Primary materials</label>
+              <input type="text" id="materials" name="materials" placeholder="e.g., Sterling silver, pearls">
+            </div>
+            
+            <div class="form-group">
+              <label for="time">Time to make</label>
+              <input type="text" id="time" name="time" placeholder="e.g., 2 hours">
+            </div>
+            
+            <div class="form-group">
+              <label for="notes">Additional notes</label>
+              <textarea id="notes" name="notes" rows="2" placeholder="Anything else?"></textarea>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="platform">Where you sell</label>
-            <select id="platform" name="platform" required>
-              <option value="">Select platform...</option>
-              <option value="etsy">Etsy</option>
-              <option value="instagram">Instagram</option>
-              <option value="website">Own website</option>
-              <option value="craft_fair">Craft fairs</option>
-              <option value="not_yet">Not selling yet</option>
-            </select>
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="materials">
-            Primary materials 
-            <span class="optional">(optional - helps accuracy)</span>
-          </label>
-          <input type="text" id="materials" name="materials" placeholder="e.g., Sterling silver, freshwater pearls">
-        </div>
-        
-        <div class="form-group">
-          <label for="time">
-            Time to make 
-            <span class="optional">(optional)</span>
-          </label>
-          <input type="text" id="time" name="time" placeholder="e.g., 2 hours, 30 minutes">
-        </div>
-        
-        <div class="form-group">
-          <label for="notes">
-            Additional notes 
-            <span class="optional">(optional)</span>
-          </label>
-          <textarea id="notes" name="notes" rows="2" placeholder="Anything else we should know?"></textarea>
-        </div>
+        </details>
         
         <div style="margin-top:24px">
-          <button type="submit" class="btn" style="width:100%" id="submitBtn">
-            Get my pricing report →
+          <button type="submit" class="btn btn-cta" style="width:100%" id="submitBtn">
+            Get my pricing report (Free) →
           </button>
-          <p style="text-align:center;margin-top:12px;font-size:12px;color:var(--muted)">
-            🔒 By clicking "Get my pricing report", you agree to our <a href="#terms" onclick="openLegal('terms'); return false;">Terms</a> and <a href="#privacy" onclick="openLegal('privacy'); return false;">Privacy Policy</a>.<br>
-            Free during beta • 24-hour delivery • <span id="queuePosition">You'll be #8 in queue</span><br>
-            You'll receive your pricing report and may receive product updates. Unsubscribe anytime.
+          <p style="text-align:center;margin-top:12px;font-size:11px;color:var(--muted)">
+            🔒 24h delivery • <span id="queuePosition">#8 in queue</span><br>
+            By submitting, you agree to our <a href="#terms" onclick="openLegal('terms'); return false;">Terms</a> & <a href="#privacy" onclick="openLegal('privacy'); return false;">Privacy</a>
           </p>
         </div>
       </form>
@@ -386,7 +421,7 @@
     // Update UI
     const spotsLeft = Math.max(0, queueData.total - queueData.position);
     document.getElementById('spotsLeft').textContent = spotsLeft;
-    document.getElementById('queuePosition').textContent = `You'll be #${queueData.position} in queue`;
+    document.getElementById('queuePosition').textContent = `#${queueData.position} in queue`;
     
     // Modal functions
     function openModal() {
@@ -497,6 +532,8 @@
         document.getElementById('fileName').textContent = workingFile.name;
         document.getElementById('fileSize').textContent = formatFileSize(workingFile.size);
         preview.style.display = 'flex';
+        uploadZone.classList.add('has-file');
+        uploadZone.innerHTML = '<div style="text-align:center;color:var(--success);font-weight:600">✓ Photo uploaded</div>';
       } catch (e) {
         console.error('Error handling file:', e);
         alert('Could not process the image. Please try a JPG/PNG.');
@@ -507,6 +544,10 @@
       selectedFile = null;
       fileInput.value = '';
       preview.style.display = 'none';
+      uploadZone.classList.remove('has-file');
+      uploadZone.innerHTML = '<div class="upload-icon">📸</div><div style="font-weight:600;margin-bottom:4px">Upload YOUR jewelry photo</div><div style="font-size:13px;color:var(--muted)">Click or drag • JPG/PNG up to 25MB</div>';
+      // Re-attach the file input
+      uploadZone.appendChild(fileInput);
     }
     
     function formatFileSize(bytes) {
