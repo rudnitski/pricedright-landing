@@ -472,7 +472,11 @@
     // Update UI
     const spotsLeft = Math.max(0, queueData.total - queueData.position);
     document.getElementById('spotsLeft').textContent = spotsLeft;
-    document.getElementById('queuePosition').textContent = `#${queueData.position} in queue`;
+    // Guard: element may not exist on page
+    const queuePositionEl = document.getElementById('queuePosition');
+    if (queuePositionEl) {
+      queuePositionEl.textContent = `#${queueData.position} in queue`;
+    }
     
     // Modal functions
     function openModal() {
