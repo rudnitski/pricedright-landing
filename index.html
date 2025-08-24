@@ -4,12 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PricedRight — Never underprice your jewelry again</title>
-  <meta name="description" content="Upload a photo. Get expert pricing in 24 hours. Trusted by 500+ Etsy sellers. Free during beta.">
+  <meta name="description" content="Get a simple email guide to price your jewelry correctly. Optional photo for a personalized estimate within 24 hours. Trusted by 500+ Etsy sellers. Free during beta.">
   <meta property="og:image" content="assets/example-jewelry.png">
   
   <!-- Open Graph for Reddit/social -->
   <meta property="og:title" content="PricedRight - AI Jewelry Pricing Assistant" />
-  <meta property="og:description" content="Stop guessing what to charge. Get data-backed pricing in 24 hours." />
+  <meta property="og:description" content="Stop guessing what to charge. Get a step‑by‑step email guide. Reply with a photo for a personalized estimate within 24h." />
   <meta property="og:type" content="website" />
   
   <style>
@@ -155,6 +155,10 @@
   <!-- Plausible Analytics -->
   <!-- Update this line in index.html before deploying to Netlify -->
   <script defer data-domain="pricedright.netlify.app" src="https://plausible.io/js/script.js"></script>
+  <script>
+    // Plausible queue shim so early calls don't get lost
+    window.plausible = window.plausible || function(){ (window.plausible.q = window.plausible.q || []).push(arguments) }
+  </script>
   
   <!-- Diagnostic Analytics -->
   <script>
@@ -209,15 +213,15 @@
         <span class="logo">💎 PricedRight</span>
         <span class="trust">Beta</span>
       </div>
-      <button class="btn btn-cta" onclick="openModal()">Get pricing report →</button>
+      <button class="btn btn-cta" onclick="openModal()">Check my price →</button>
     </div>
   </header>
 
   <main class="wrap">
     <!-- Mobile intro - only visible on mobile -->
     <div class="mobile-intro">
-      <h1>See what other Etsy sellers charge</h1>
-      <p>Free pricing analysis • 24h delivery</p>
+      <h1>Is your jewelry priced too low?</h1>
+      <p>Free pricing guide • 24h delivery</p>
       <!-- Add immediate trust signal -->
       <div style="margin-top:8px;padding:8px;background:#fff;border-radius:6px;border:1px solid #ddd;font-size:12px">
         <span style="color:#22c55e">✓</span> <strong>487 sellers</strong> priced their jewelry this week
@@ -225,8 +229,8 @@
     </div>
     <section class="hero">
       <div>
-        <h1>See exactly what to charge based on 10,000+ similar pieces</h1>
-        <p class="subtitle">Upload your jewelry photo. We analyze it against our database of successful Etsy listings. Get your personalized pricing report in 24 hours.</p>
+        <h1>Is your jewelry priced too low? See what similar pieces sell for.</h1>
+        <p class="subtitle">Enter your email — we’ll send step‑by‑step instructions to price your jewelry correctly. Reply with a photo anytime for a personalized estimate.</p>
         
         <div class="stats">
           <div class="stat">
@@ -244,7 +248,7 @@
         </div>
         
         <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <button class="btn btn-cta" onclick="openModal()">Analyze my jewelry (free) →</button>
+          <button class="btn btn-cta" onclick="openModal()">Check my price →</button>
         </div>
       </div>
       
@@ -265,7 +269,7 @@
 
     <!-- Sticky CTA for mobile -->
     <div class="sticky-cta">
-      <button class="btn btn-cta" style="width:100%" onclick="openModal()">See my pricing (free) →</button>
+      <button class="btn btn-cta" style="width:100%" onclick="openModal()">Check my price →</button>
     </div>
     
     <!-- Legal section moved to footer -->
@@ -312,89 +316,30 @@
   <div class="modal" id="uploadModal">
     <div class="backdrop" onclick="closeModal()"></div>
     <div class="sheet compact">
-      <div class="form-header">
-        <h2>Get your free analysis</h2>
-        <button class="close-btn" onclick="closeModal()">×</button>
-      </div>
-      
-      <!-- Add clear instruction -->
-      <div style="background:#f0f9ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-bottom:16px;font-size:14px;color:#1e40af">
-        📸 <strong>Takes 30 seconds:</strong> Upload your jewelry photo, get pricing based on 10,000+ similar successful listings
-      </div>
-      
-      <form id="pricingForm">
-        <div class="upload-zone" id="uploadZone">
-          <div class="upload-icon">📸</div>
-          <div style="font-weight:600;margin-bottom:4px">Click to upload jewelry photo</div>
-          <div style="font-size:13px;color:var(--muted)">JPG or PNG • Any size</div>
-          <input type="file" id="fileInput" name="photo" accept="image/*" style="display:none">
+      <div id="emailStep" style="display:block">
+        <div class="form-header">
+          <h2>Get your pricing range</h2>
+          <button class="close-btn" onclick="closeModal()">×</button>
         </div>
-        
-        <div class="preview" id="preview">
-          <img id="previewImg" alt="Your jewelry">
-          <div class="preview-info">
-            <div class="preview-name" id="fileName">filename.jpg</div>
-            <div class="preview-size" id="fileSize">2.3 MB</div>
+        <div style="background:#f0f9ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-bottom:16px;font-size:14px;color:#1e40af">
+          ✉️ <strong>One field only:</strong> Enter your email and we’ll send a step‑by‑step guide on how to price your jewelry well. You can reply later with a photo for a personalized estimate (optional).
+        </div>
+        <form id="emailOnlyForm">
+          <div class="form-group">
+            <label for="lead_email">Email</label>
+            <input type="email" id="lead_email" name="email" required placeholder="you@example.com" autocomplete="email">
           </div>
-          <button type="button" onclick="removeFile()" style="background:none;border:none;color:var(--error);cursor:pointer">Remove</button>
-        </div>
-        
-        <!-- Email and platform are most important - keep them prominent -->
-        <div class="form-group">
-          <label for="email">Email for your report</label>
-          <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
-        </div>
-        
-        <div class="form-group">
-          <label for="platform">Where do you sell?</label>
-          <select id="platform" name="platform" required>
-            <option value="">Select...</option>
-            <option value="etsy">Etsy</option>
-            <option value="instagram">Instagram</option>
-            <option value="website">Own website</option>
-            <option value="craft_fair">Craft fairs</option>
-            <option value="not_yet">Not selling yet</option>
-          </select>
-        </div>
-        
-        <!-- Collapsible optional fields on mobile -->
-        <details style="margin-top:16px">
-          <summary style="cursor:pointer;font-weight:600;font-size:14px;padding:8px 0">+ Add details for better accuracy (optional)</summary>
-          <div style="margin-top:12px">
-            <div class="form-group">
-              <label for="materials">Primary materials</label>
-              <input type="text" id="materials" name="materials" placeholder="e.g., Sterling silver, pearls">
-            </div>
-            
-            <div class="form-group">
-              <label for="time">Time to make</label>
-              <input type="text" id="time" name="time" placeholder="e.g., 2 hours">
-            </div>
-            
-            <div class="form-group">
-              <label for="notes">Additional notes</label>
-              <textarea id="notes" name="notes" rows="2" placeholder="Anything else?"></textarea>
-            </div>
-          </div>
-        </details>
-        
-        <div style="margin-top:24px">
-          <button type="submit" class="btn btn-cta" style="width:100%" id="submitBtn">
-            Analyze & send report →
-          </button>
-          <p style="text-align:center;margin-top:12px;font-size:11px;color:var(--muted)">
-            ✓ Free during beta • 24h delivery • No spam
-          </p>
-        </div>
-      </form>
-      
+          <button type="submit" class="btn btn-cta" style="width:100%;margin-top:16px">Get my range →</button>
+          <p style="text-align:center;margin-top:12px;font-size:11px;color:var(--muted)">We’ll email your range within 24 hours. You can reply later with details if you like.</p>
+        </form>
+      </div>
       <div class="success-box" id="successBox">
         <div class="success-icon">✅</div>
-        <div class="success-title">Perfect! Analysis started</div>
-        <p class="success-msg">We're comparing your piece to our database. You'll receive your pricing report within 24 hours.</p>
+        <div class="success-title">You're in! Pricing guide on its way</div>
+        <p class="success-msg">We’ll email you a quick‑start guide for pricing your jewelry. If you reply with a photo and details, we’ll follow up with a personalized estimate within 24 hours.</p>
         <div class="queue-info">
           <strong>Your position:</strong> <span id="finalPosition">#8</span> in today's queue<br>
-          <strong>Estimated delivery:</strong> <span id="deliveryTime">Tomorrow, 2:30 PM</span>
+          <strong>Guide ETA:</strong> <span id="deliveryTime">Tomorrow, 2:30 PM</span>
         </div>
         <button class="btn" onclick="closeModal()" style="margin-top:20px">Got it</button>
       </div>
@@ -446,14 +391,12 @@
   </footer>
 
   <script>
-    // State
-    let selectedFile = null;
+    // State (email-only)
     const modal = document.getElementById('uploadModal');
-    const form = document.getElementById('pricingForm');
-    const uploadZone = document.getElementById('uploadZone');
-    const fileInput = document.getElementById('fileInput');
-    const preview = document.getElementById('preview');
     const successBox = document.getElementById('successBox');
+    const urlParams = new URLSearchParams(window.location.search);
+    const VARIANT = 'email_only';
+    const CREATIVE = urlParams.get('utm_content') || urlParams.get('ad') || 'unknown';
     
     // Simulated queue (stored per day)
     const today = new Date().toDateString();
@@ -482,19 +425,19 @@
     function openModal() {
       modal.classList.add('open');
       track('modal_opened');
+      const emailStep = document.getElementById('emailStep');
+      if (emailStep) emailStep.style.display = 'block';
     }
-    
+
     function closeModal() {
       modal.classList.remove('open');
-      if (successBox.style.display === 'block') {
-        // Reset form after success
-        form.reset();
-        form.style.display = 'block';
-        successBox.style.display = 'none';
-        preview.style.display = 'none';
-        selectedFile = null;
-      }
+      if (successBox) successBox.style.display = 'none';
+      const emailStep = document.getElementById('emailStep');
+      if (emailStep) emailStep.style.display = 'block';
     }
+    // Expose to inline onclick handlers
+    window.openModal = openModal;
+    window.closeModal = closeModal;
     
     function scrollToExample() {
       // On mobile, open the modal instead of scrolling to example
@@ -506,179 +449,46 @@
       }
     }
     
-    // File handling
-    uploadZone.addEventListener('click', () => fileInput.click());
-    
-    uploadZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadZone.classList.add('active');
-    });
-    
-    uploadZone.addEventListener('dragleave', () => {
-      uploadZone.classList.remove('active');
-    });
-    
-    uploadZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadZone.classList.remove('active');
-      const files = e.dataTransfer.files;
-      if (files.length > 0) handleFile(files[0]);
-    });
-    
-    fileInput.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) handleFile(e.target.files[0]);
-    });
-    
-    const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
-    const IMAGE_EXT_RE = /\.(png|jpe?g|gif|webp|heic|heif|bmp|tiff?)$/i;
-    
-    async function handleFile(file) {
-      const isImage = (file.type && file.type.startsWith('image/')) || IMAGE_EXT_RE.test(file.name || '');
-      if (!isImage) {
-        alert('Please upload an image file');
-        return;
-      }
-      
-      // Reject HEIC files
-      const isHeic = /heic|heif/i.test(file.type) || /\.(heic|heif)$/i.test(file.name || '');
-      if (isHeic) {
-        alert('Please use JPG or PNG format (iPhone: use Screenshots or Camera app with "Most Compatible" setting)');
-        return;
-      }
-      
-      try {
-        if (file.size > MAX_FILE_SIZE) {
-          alert('File size must be less than 25MB');
-          return;
-        }
-        selectedFile = file;
-        const objectUrl = URL.createObjectURL(file);
-        document.getElementById('previewImg').src = objectUrl;
-        document.getElementById('fileName').textContent = file.name;
-        document.getElementById('fileSize').textContent = formatFileSize(file.size);
-        preview.style.display = 'flex';
-        uploadZone.classList.add('has-file');
-        uploadZone.innerHTML = '<div style="text-align:center;color:var(--success);font-weight:600">✓ Photo uploaded</div>';
-      } catch (e) {
-        console.error('Error handling file:', e);
-        alert('Could not process the image. Please try a JPG/PNG.');
-      }
-    }
-    
-    function removeFile() {
-      selectedFile = null;
-      fileInput.value = '';
-      preview.style.display = 'none';
-      uploadZone.classList.remove('has-file');
-      uploadZone.innerHTML = '<div class="upload-icon">📸</div><div style="font-weight:600;margin-bottom:4px">Upload YOUR jewelry photo</div><div style="font-size:13px;color:var(--muted)">Click or drag • JPG/PNG up to 25MB</div>';
-      // Re-attach the file input
-      uploadZone.appendChild(fileInput);
-    }
-    
-    function formatFileSize(bytes) {
-      if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-    }
-    
-    // Form submission
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      if (!selectedFile) {
-        alert('Please upload a photo of your jewelry');
-        return;
-      }
-      
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner"></span> Analyzing...';
-      
-      // Collect form data
-      const formData = new FormData();
-      formData.append('email', document.getElementById('email').value);
-      formData.append('platform', document.getElementById('platform').value);
-      formData.append('materials', document.getElementById('materials').value || '');
-      formData.append('time', document.getElementById('time').value || '');
-      formData.append('notes', document.getElementById('notes').value || '');
-      // Attach selected image directly for Formspree (paid plan)
-      if (selectedFile) {
-        formData.append('photo', selectedFile, selectedFile.name);
-      }
-      
-      // Add UTM parameters
-      const urlParams = new URLSearchParams(window.location.search);
-      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(param => {
-        if (urlParams.get(param)) {
-          formData.append(param, urlParams.get(param));
+    // Step 1: Email-only submit → send lead, show success immediately
+    const emailStep = document.getElementById('emailStep');
+    const emailOnlyForm = document.getElementById('emailOnlyForm');
+    if (emailOnlyForm) {
+      emailOnlyForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Sending...';
+
+        const fd = new FormData();
+        fd.append('email', document.getElementById('lead_email').value);
+        fd.append('variant', VARIANT);
+        ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{ if (urlParams.get(k)) fd.append(k, urlParams.get(k)); });
+
+        try {
+          const res = await fetch('https://formspree.io/f/mwpqyneb', { method:'POST', body: fd, headers:{ 'Accept':'application/json' } });
+          if (!res.ok) throw new Error('Lead submit failed');
+          track('Email Submitted', { variant: VARIANT });
+          if (emailStep) emailStep.style.display = 'none';
+          if (successBox) {
+            document.getElementById('finalPosition').textContent = `#${queueData.position}`;
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(14, 30, 0);
+            document.getElementById('deliveryTime').textContent = tomorrow.toLocaleString('en-US', { weekday: 'long', hour: 'numeric', minute: '2-digit' });
+            successBox.style.display = 'block';
+          }
+        } catch (err) {
+          console.error(err);
+          alert('Could not submit email. Please try again.');
+        } finally {
+          btn.disabled = false; btn.textContent = 'Get my range →';
         }
       });
-      
-      // Add metadata
-      formData.append('queue_position', queueData.position);
-      formData.append('user_agent', navigator.userAgent);
-      formData.append('timestamp', new Date().toISOString());
-      
-      // Add subreddit parameter if present (for Reddit ads)
-      if (urlParams.get('subreddit')) {
-        formData.append('subreddit', urlParams.get('subreddit'));
-      }
-      
-      // Add referrer
-      if (document.referrer) {
-        formData.append('referrer', document.referrer);
-      }
-      
-      try {
-        // Submit to Formspree
-        const response = await fetch('https://formspree.io/f/mwpqyneb', {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-        
-        if (response.ok) {
-          // Update queue
-          queueData.submitted++;
-          localStorage.setItem(queueKey, JSON.stringify(queueData));
-          
-          // Show success
-          document.getElementById('finalPosition').textContent = `#${queueData.position}`;
-          const tomorrow = new Date();
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          tomorrow.setHours(14, 30, 0);
-          document.getElementById('deliveryTime').textContent = tomorrow.toLocaleString('en-US', {
-            weekday: 'long',
-            hour: 'numeric',
-            minute: '2-digit'
-          });
-          
-          form.style.display = 'none';
-          successBox.style.display = 'block';
-          
-          track('form_submitted', {
-            platform: document.getElementById('platform').value,
-            has_materials: !!document.getElementById('materials').value,
-            has_time: !!document.getElementById('time').value
-          });
-        } else {
-          throw new Error('Submission failed');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Sorry, something went wrong. Please try again or email us at help@pricedright.ai');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Get my pricing report →';
-      }
-    });
+    }
     
     // Analytics helper
     function track(event, props = {}) {
       if (window.plausible) {
-        window.plausible(event, { props });
+        window.plausible(event, { props: Object.assign({ variant: VARIANT }, props) });
       }
     }
     
